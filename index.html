@@ -129,9 +129,28 @@
         }
 
         function handleInput() {
-            if (keys.ArrowLeft) player.angle -= player.turnSpeed;
-            if (keys.ArrowRight) player.angle += player.turnSpeed;
+            let rotation = 0;
+            if (keys.ArrowLeft) {
+                rotation = -player.turnSpeed;
+            }
+            if (keys.ArrowRight) {
+                rotation = player.turnSpeed;
+            }
 
+            // Ship rotation
+            if (rotation !== 0) {
+                player.angle += rotation;
+
+                const cos = Math.cos(rotation);
+                const sin = Math.sin(rotation);
+                const oldVx = player.velocityX;
+                const oldVy = player.velocityY;
+
+                player.velocityX = oldVx * cos - oldVy * sin;
+                player.velocityY = oldVx * sin + oldVy * cos;
+            }
+
+            // Thrust and braking
             if (keys.ArrowUp) {
                 player.velocityX += Math.cos(player.angle) * player.thrust;
                 player.velocityY += Math.sin(player.angle) * player.thrust;
